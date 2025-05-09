@@ -29,3 +29,93 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* New bookstore styling */
+:root {
+    --primary: #1A535C;
+    --secondary: #F7B733;
+    --neutral-dark: #333333;
+    --neutral-light: #F4F1DE;
+    --accent: #E76F51;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--neutral-light);
+    color: var(--neutral-dark);
+    line-height: 1.6;
+    /* Keep the existing margin-bottom: 60px;*/
+}
+
+header {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    background-color: var(--primary) !important;
+    border-bottom: 3px solid var(--secondary);
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+    .navbar-brand:hover {
+        color: var(--secondary) !important;
+    }
+
+.navbar-toggler {
+    border-color: white;
+}
+
+.navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+}
+
+.nav-link {
+    color: white !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin: 0 5px;
+}
+
+    .nav-link:hover {
+        color: var(--secondary) !important;
+        transform: translateY(-2px);
+    }
+
+.container {
+    max-width: 1200px;
+}
+
+main {
+    min-height: 70vh;
+    padding: 2rem 0;
+}
+
+footer {
+    background-color: var(--primary);
+    color: white !important;
+    padding: 1rem 0;
+}
+
+    footer a {
+        color: var(--secondary) !important;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+            color: white !important;
+        }
+
+.box-shadow {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.border-bottom {
+    border-bottom: none !important;
+}
