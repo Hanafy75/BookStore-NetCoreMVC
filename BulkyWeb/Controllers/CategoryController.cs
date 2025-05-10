@@ -16,7 +16,7 @@ namespace BulkyWeb.Controllers
         public async Task<IActionResult> Index()
         {
             var Categories = await _categoryService.GetAllCategoriesAsync();
-            return View();
+            return View(Categories);
         }
     }
 }
