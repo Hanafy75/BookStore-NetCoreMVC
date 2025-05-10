@@ -1,28 +1,38 @@
 ﻿@model List<Category>
 
-
 <div class="container">
-	<div class="row pb-4">
-		<div class="col-12">
-			<h2 class="text-primary">Category List</h2>
-		</div>
-	</div>
+    <!-- Header and Button Row -->
+    <div class="row align-items-center py-3">
+        <div class="col-6">
+            <h2 class="text-primary mb-0">Category List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus"></i> Create New Category
+            </a>
+        </div>
+    </div>
 
-	<table class="table table-bordered table-striped table-hover">
-		<thead class="table-primary">
-			<tr>
-				<th>Name</th>
-				<th>Display Order</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var obj in Model)
-			{
-				<tr>
-					<td>@obj.Name</td>
-					<td>@obj.DisplayOrder</td>
-				</tr>
-			}
-		</tbody>
-	</table>
+    <!-- Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Name</th>
+                        <th>Display Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model)
+                    {
+                        <tr>
+                            <td>@obj.Name</td>
+                            <td>@obj.DisplayOrder</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

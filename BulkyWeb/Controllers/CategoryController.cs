@@ -18,5 +18,10 @@ namespace BulkyWeb.Controllers
             var Categories = await _categoryService.GetAllCategoriesAsync();
             return View(Categories);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
