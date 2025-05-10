@@ -1,4 +1,5 @@
 ﻿using Bookstore.Business.IServices;
+using Bookstore.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -19,9 +20,22 @@ namespace BulkyWeb.Controllers
             return View(Categories);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Category category)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(category);  
+            }
+            _categoryService.AddCategoryAsync(category);
+            return RedirectToAction("Index");
         }
     }
 }

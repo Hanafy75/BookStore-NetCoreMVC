@@ -2,11 +2,6 @@
 using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bookstore.DataAccess.Repositories
 {
@@ -27,6 +22,12 @@ namespace Bookstore.DataAccess.Repositories
         {
             var category = await _context.Categories.Where(c=> c.Id == id).FirstOrDefaultAsync();
             return category ?? throw new Exception("Category not found");
+        }
+
+        public async Task AddAsync(Category category)
+        {
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
         }
     }
 }

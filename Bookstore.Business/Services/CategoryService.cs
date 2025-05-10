@@ -20,5 +20,10 @@ namespace Bookstore.Business.Services
         {
             return await _categoryRepo.GetByIdAsync(id);
         }
+
+        public async Task AddCategoryAsync(Category category)
+        {
+            await _categoryRepo.AddAsync(category);
+        }
     }
 }

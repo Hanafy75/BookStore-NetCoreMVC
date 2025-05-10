@@ -5,5 +5,6 @@ namespace Bookstore.Business.IServices
     {
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int id);
+        Task AddCategoryAsync(Category category);
     }
 }
