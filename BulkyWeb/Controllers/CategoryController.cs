@@ -49,7 +49,7 @@ namespace BulkyWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var Category = await _categoryService.GetCategoryByIdAsync(id);
+            var Category = await _categoryService.GetCategoryAsync(c => c.Id == id);
             if (Category == null)
             {
                 TempData["error"] = "Category not found";
@@ -85,7 +85,7 @@ namespace BulkyWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryAsync(c => c.Id == id);
             if (category == null)
             {
                 TempData["error"] = "Category not found";

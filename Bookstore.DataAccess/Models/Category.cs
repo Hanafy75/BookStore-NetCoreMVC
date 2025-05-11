@@ -4,7 +4,7 @@ using Bookstore.Common.Validation;
 
 namespace Bookstore.DataAccess.Models
 {
-    public class Category
+    public class Category : IEntity
     {
         public int Id { get; set; }
 
