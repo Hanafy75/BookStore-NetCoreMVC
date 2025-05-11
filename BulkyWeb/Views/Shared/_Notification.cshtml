@@ -1,0 +1,29 @@
+﻿@if (TempData["success"] != null)
+{
+    <div id="successToast" class="position-fixed bottom-0 end-0 p-3 m-4" style="z-index: 1100;">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-success text-white">
+                @TempData["success"]
+            </div>
+        </div>
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div id="errorToast" class="position-fixed bottom-0 end-0 p-3 m-4" style="z-index: 1100;">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body bg-danger text-white">
+                @TempData["error"]
+            </div>
+        </div>
+    </div>
+}

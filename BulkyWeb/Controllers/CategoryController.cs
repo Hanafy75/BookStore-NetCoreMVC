@@ -36,7 +36,9 @@ namespace BulkyWeb.Controllers
             {
                 return View(category);
             }
+
             await _categoryService.AddCategoryAsync(category);
+            TempData["success"] = "Category created successfully";
             return RedirectToAction(nameof(Index));
         }
 
@@ -48,7 +50,11 @@ namespace BulkyWeb.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var Category = await _categoryService.GetCategoryByIdAsync(id);
-            if (Category == null) return NotFound();
+            if (Category == null)
+            {
+                TempData["error"] = "Category not found";
+                return NotFound();
+            }
             return View(Category);
         }
 
@@ -63,7 +69,11 @@ namespace BulkyWeb.Controllers
 
 
             var result = await _categoryService.UpdateAsync(category);
-            if (result) return RedirectToAction(nameof(Index));
+            if (result)
+            {
+                TempData["success"] = "Category updated successfully";
+                return RedirectToAction(nameof(Index));
+            }
 
             ModelState.AddModelError("Name", "A category with this name already exists.");
             return View(category);
@@ -78,6 +88,7 @@ namespace BulkyWeb.Controllers
             var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
+                TempData["error"] = "Category not found";
                 return NotFound();
             }
 
