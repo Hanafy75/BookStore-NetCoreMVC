@@ -20,6 +20,8 @@ namespace BulkyWeb.Controllers
             return View(Categories);
         }
 
+        #region Create
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -28,14 +30,47 @@ namespace BulkyWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> Create(Category category)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return View(category);  
+                return View(category);
             }
-            _categoryService.AddCategoryAsync(category);
-            return RedirectToAction("Index");
+            await _categoryService.AddCategoryAsync(category);
+            return RedirectToAction(nameof(Index));
         }
+
+        #endregion
+
+        #region Edit
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var Category = await _categoryService.GetCategoryByIdAsync(id);
+            if (Category == null) return NotFound();
+            return View(Category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Category category)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+
+            var result = await _categoryService.UpdateAsync(category);
+            if (result) return RedirectToAction(nameof(Index));
+
+            ModelState.AddModelError("Name", "A category with this name already exists.");
+            return View(category);
+        }
+
+        #endregion
+
+
     }
 }

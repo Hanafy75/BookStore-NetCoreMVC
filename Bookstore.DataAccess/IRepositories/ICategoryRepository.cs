@@ -7,5 +7,7 @@ namespace Bookstore.DataAccess.IRepositories
         Task<IEnumerable<Category>> GetAllAsync();
         Task<Category> GetByIdAsync(int id);
         Task AddAsync(Category category);
+        Task UpdateAsync(Category category);
+        Task<bool> IsCategoryNameExistsAsync(string name, int? excludeId = null);
     }
 }

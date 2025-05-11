@@ -25,5 +25,20 @@ namespace Bookstore.Business.Services
         {
             await _categoryRepo.AddAsync(category);
         }
+
+        public async Task<bool> UpdateAsync(Category category)
+        {
+            var existingCategory = await _categoryRepo.GetByIdAsync(category.Id);
+            if (existingCategory == null) return false;
+
+            // Check for duplicate name only if the name has changed
+            if (!String.Equals(existingCategory.Name, category.Name, StringComparison.OrdinalIgnoreCase) &&
+                await _categoryRepo.IsCategoryNameExistsAsync(category.Name, category.Id)) return false;
+
+            existingCategory.Name = category.Name;
+            existingCategory.DisplayOrder = category.DisplayOrder;
+            await _categoryRepo.UpdateAsync(existingCategory);
+            return true;
+        }
     }
 }
