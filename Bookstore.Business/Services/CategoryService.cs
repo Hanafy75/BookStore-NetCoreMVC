@@ -40,5 +40,10 @@ namespace Bookstore.Business.Services
             await _categoryRepo.UpdateAsync(existingCategory);
             return true;
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _categoryRepo.DeleteAsync(id);
+        }
     }
 }

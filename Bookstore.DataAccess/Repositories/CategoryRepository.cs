@@ -43,5 +43,14 @@ namespace Bookstore.DataAccess.Repositories
             // so it's gonna go for the right side to check if the id is the same or not, but if excludeId is null (has value) the ! operator is gonna make it true,
             // so it become short circuit and it won't check for the ID.
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync( c => c.Id == id);
+            if (category == null) throw new KeyNotFoundException($"Category with ID {id} not found.");
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+        }
     }
 }

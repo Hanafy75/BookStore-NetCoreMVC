@@ -7,5 +7,6 @@ namespace Bookstore.Business.IServices
         Task<Category> GetCategoryByIdAsync(int id);
         Task AddCategoryAsync(Category category);
         Task<bool> UpdateAsync(Category category);
+        Task DeleteAsync(int id);
     }
 }

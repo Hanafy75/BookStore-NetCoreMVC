@@ -71,6 +71,20 @@ namespace BulkyWeb.Controllers
 
         #endregion
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
 
+            await _categoryService.DeleteAsync(id);
+
+            TempData["success"] = "Category deleted successfully";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
