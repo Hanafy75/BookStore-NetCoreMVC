@@ -24,10 +24,14 @@ namespace Bookstore.Business.Services
             return await _unitOfWork.CategoryRepository.GetAsync(predicate);
         }
 
-        public async Task AddCategoryAsync(Category category)
+        public async Task<bool> AddCategoryAsync(Category category)
         {
+            //category with the same name exist
+            if (await _unitOfWork.CategoryRepository.IsCategoryNameExistsAsync(category.Name)) return false;
+
             await _unitOfWork.CategoryRepository.AddAsync(category);
             await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
         public async Task<UpdateCategoryResult> UpdateAsync(Category category)

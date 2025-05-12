@@ -7,7 +7,7 @@ namespace Bookstore.Business.IServices
     {
         Task<IEnumerable<Category>> GetAllCategoriesAsync();
         Task<Category?> GetCategoryAsync(Expression<Func<Category,bool>> predicate);
-        Task AddCategoryAsync(Category category);
+        Task<bool> AddCategoryAsync(Category category);
         Task<UpdateCategoryResult> UpdateAsync(Category category);
         Task DeleteAsync(int id);
     }

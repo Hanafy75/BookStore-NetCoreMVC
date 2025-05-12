@@ -38,7 +38,12 @@ namespace BulkyWeb.Controllers
                 return View(category);
             }
 
-            await _categoryService.AddCategoryAsync(category);
+            var result = await _categoryService.AddCategoryAsync(category);
+            if(!result)
+            {
+                ModelState.AddModelError("Name","A category with this name already exists.");
+                return View(category);
+            }
             TempData["success"] = "Category created successfully";
             return RedirectToAction(nameof(Index));
         }
