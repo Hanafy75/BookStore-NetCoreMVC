@@ -4,8 +4,9 @@ using Bookstore.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace BulkyWeb.Controllers
+namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
