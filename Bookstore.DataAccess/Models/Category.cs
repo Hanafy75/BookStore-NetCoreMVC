@@ -18,5 +18,7 @@ namespace Bookstore.DataAccess.Models
         [Range(1,100,ErrorMessage ="Range Must Be Between 1 and 100")]
         [NotEqual("Name")]
         public int DisplayOrder { get; set; }
+
+        //public ICollection<Product>? Products { get; set; }
     }
 }
