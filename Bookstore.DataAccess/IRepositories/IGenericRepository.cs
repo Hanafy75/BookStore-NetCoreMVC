@@ -9,6 +9,5 @@ namespace Bookstore.DataAccess.IRepositories
         Task AddAsync(T entity);
         void Update(T entity);
         Task DeleteAsync(int id);
-        Task SaveChangesAsync();
     }
 }

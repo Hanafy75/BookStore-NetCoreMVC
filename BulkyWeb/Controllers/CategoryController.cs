@@ -1,4 +1,5 @@
 ﻿using Bookstore.Business.IServices;
+using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -69,14 +70,25 @@ namespace BulkyWeb.Controllers
 
 
             var result = await _categoryService.UpdateAsync(category);
-            if (result)
+            switch (result)
             {
+                case UpdateCategoryResult.Updated:
                 TempData["success"] = "Category updated successfully";
                 return RedirectToAction(nameof(Index));
-            }
 
-            ModelState.AddModelError("Name", "A category with this name already exists.");
+                case UpdateCategoryResult.NoChanges:
+                    TempData["info"] = "No changes detected";
+                    return RedirectToAction(nameof(Index));
+
+                case UpdateCategoryResult.DuplicateName:
+                    ModelState.AddModelError("Name", "A category with this name already exists.");
+                    return View(category);
+
+                case UpdateCategoryResult.NotFound:
+                    return NotFound();
+            }
             return View(category);
+
         }
 
         #endregion

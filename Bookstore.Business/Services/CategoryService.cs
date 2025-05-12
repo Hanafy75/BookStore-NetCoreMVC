@@ -1,4 +1,5 @@
 ﻿using Bookstore.Business.IServices;
+using Bookstore.Common.Enums;
 using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
 using System.Linq.Expressions;
@@ -6,48 +7,56 @@ namespace Bookstore.Business.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(ICategoryRepository categoryRepo)
+        public CategoryService(IUnitOfWork unitOfWork)
         {
-            _categoryRepo = categoryRepo;
+            _unitOfWork = unitOfWork;
         }
+
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _categoryRepo.GetAllAsync();
+            return await _unitOfWork.CategoryRepository.GetAllAsync();
         }
 
         public async Task<Category?> GetCategoryAsync(Expression<Func<Category, bool>> predicate)
         {
-            return await _categoryRepo.GetAsync(predicate);
+            return await _unitOfWork.CategoryRepository.GetAsync(predicate);
         }
 
         public async Task AddCategoryAsync(Category category)
         {
-            await _categoryRepo.AddAsync(category);
-            await _categoryRepo.SaveChangesAsync();
+            await _unitOfWork.CategoryRepository.AddAsync(category);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(Category category)
+        public async Task<UpdateCategoryResult> UpdateAsync(Category category)
         {
-            var existingCategory = await _categoryRepo.GetAsync(c=> c.Id==category.Id);
-            if (existingCategory == null) return false;
+            var oldCategory = await _unitOfWork.CategoryRepository.GetAsync(c=> c.Id==category.Id);
+            if (oldCategory == null) return UpdateCategoryResult.NotFound;
 
             // Check for duplicate name only if the name has changed
-            if (!String.Equals(existingCategory.Name, category.Name, StringComparison.OrdinalIgnoreCase) &&
-                await _categoryRepo.IsCategoryNameExistsAsync(category.Name, category.Id)) return false;
+            if (!String.Equals(oldCategory.Name, category.Name, StringComparison.OrdinalIgnoreCase) &&
+                await _unitOfWork.CategoryRepository.IsCategoryNameExistsAsync(category.Name, category.Id)) return UpdateCategoryResult.DuplicateName;
 
-            existingCategory.Name = category.Name;
-            existingCategory.DisplayOrder = category.DisplayOrder;
-            _categoryRepo.Update(existingCategory);
-            await _categoryRepo.SaveChangesAsync();
-            return true;
+            //check fo no changes
+            if(String.Equals(oldCategory.Name,category.Name, StringComparison.OrdinalIgnoreCase)
+                && oldCategory.DisplayOrder == category.DisplayOrder) return UpdateCategoryResult.NoChanges;
+
+
+            oldCategory.Name = category.Name;
+            oldCategory.DisplayOrder = category.DisplayOrder;
+
+            _unitOfWork.CategoryRepository.Update(oldCategory);
+            await _unitOfWork.SaveChangesAsync();
+
+            return UpdateCategoryResult.Updated;
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _categoryRepo.DeleteAsync(id);
-            await _categoryRepo.SaveChangesAsync();
+            await _unitOfWork.CategoryRepository.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
