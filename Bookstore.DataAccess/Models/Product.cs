@@ -29,12 +29,14 @@ namespace Bookstore.DataAccess.Models
         [Range(1, 1000)]
         public decimal Price100 { get; set; }
 
-        
+
         //Foreing key
+        [Display(Name ="Category")]
         public int CategoryId { get; set; }
 
         [ValidateNever]
         public Category? Category { get; set; }
+
 
         [ValidateNever]
         public string ImageUrl { get; set; } = null!;

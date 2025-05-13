@@ -1,6 +1,7 @@
 ﻿using Bookstore.Business.IServices;
 using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
+using Bookstore.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -9,40 +10,48 @@ namespace BulkyWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment webHostEnvironment)
         {
             _productService = productService;
+            _categoryService = categoryService;
+            this._webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await _productService.GetAllProductsIncludeCategoryAsync();
             return View(products);
         }
 
         #region Create
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            ProductCreateViewModel viewModel = new();
+            viewModel.CategoryList = await _categoryService.GetSelectListCategories();
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(ProductCreateViewModel PviewModel)
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(PviewModel);
             }
 
-            var result = await _productService.AddProductAsync(product);
+            var result = await _productService.AddProductAsync(PviewModel.product,PviewModel.ImageFile,_webHostEnvironment.WebRootPath);
             if (!result)
             {
                 ModelState.AddModelError("Title", "A product with this Title already exists.");
-                return View(product);
+                PviewModel.CategoryList = await _categoryService.GetSelectListCategories();// This ensures the dropdown has all category options again so the user can re-submit the form properly.
+                                                                                           // => if i didn't do this the list will be empty coz the categoryId is the onlything is posted not the whole list.
+                return View(PviewModel);
             }
             TempData["success"] = "product created successfully";
             return RedirectToAction(nameof(Index));
@@ -55,26 +64,35 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var product = await _productService.GetProductAsync(c => c.Id == id);
+            Product? product = await _productService.GetProductAsync(p => p.Id == id);
+
             if (product == null)
             {
                 return NotFound();
             }
-            return View(product);
+
+            ProductEditViewModel viewModel = new()
+            {
+                product = product,
+                CategoryList = await _categoryService.GetSelectListCategories()
+            };
+
+            return View(viewModel);
         }
 
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Product product)
+        public async Task<IActionResult> Edit(ProductEditViewModel viewModel)
         {
+
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(viewModel);
             }
 
 
-            var result = await _productService.UpdateAsync(product);
+            var result = await _productService.UpdateAsync(viewModel.product, viewModel.ImageFile,_webHostEnvironment.WebRootPath);
             switch (result)
             {
                 case UpdateResult.Updated:
@@ -87,12 +105,12 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
                 case UpdateResult.DuplicateName:
                     ModelState.AddModelError("Title", "A Product with this Title already exists.");
-                    return View(product);
+                    return View(viewModel);
 
                 case UpdateResult.NotFound:
                     return NotFound();
             }
-            return View(product);
+            return View(viewModel);
 
         }
         

@@ -1,6 +1,7 @@
 ﻿using Bookstore.Common.Enums;
 using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq.Expressions;
 namespace Bookstore.Business.IServices
 {
@@ -11,5 +12,7 @@ namespace Bookstore.Business.IServices
         Task<bool> AddCategoryAsync(Category category);
         Task<UpdateResult> UpdateAsync(Category category);
         Task DeleteAsync(int id);
+        Task<SelectList> GetSelectListCategories();
+
     }
 }

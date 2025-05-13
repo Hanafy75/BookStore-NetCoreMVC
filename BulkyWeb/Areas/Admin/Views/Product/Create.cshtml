@@ -1,4 +1,4 @@
-﻿@model Product
+﻿@model ProductCreateViewModel
 
 <div class="container-fluid py-4 mb-5 pb-5">
     <div class="row justify-content-center">
@@ -17,16 +17,16 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label asp-for="Title" class="form-label fw-bold"></label>
-                                            <input asp-for="Title" class="form-control" placeholder="Enter Product name" aria-describedby="TitleValidation" />
-                                            <span asp-validation-for="Title" class="text-danger" id="TitleValidation"></span>
+                                            <label asp-for="@Model.product.Title" class="form-label fw-bold"></label>
+                                            <input asp-for="product.Title" class="form-control" placeholder="Enter Product name" aria-describedby="TitleValidation" />
+                                            <span asp-validation-for="product.Title" class="text-danger" id="TitleValidation"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label asp-for="ISBN" class="form-label fw-bold"></label>
-                                            <input asp-for="ISBN" class="form-control" placeholder="Enter ISBN" aria-describedby="ISBNValidation" />
-                                            <span asp-validation-for="ISBN" class="text-danger" id="ISBNValidation"></span>
+                                            <label asp-for="@Model.product.ISBN" class="form-label fw-bold"></label>
+                                            <input asp-for="product.ISBN" class="form-control" placeholder="Enter ISBN" aria-describedby="ISBNValidation" />
+                                            <span asp-validation-for="product.ISBN" class="text-danger" id="ISBNValidation"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -34,28 +34,27 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label asp-for="Author" class="form-label fw-bold"></label>
-                                            <input asp-for="Author" class="form-control" placeholder="Enter Author Name" aria-describedby="AuthorValidation" />
-                                            <span asp-validation-for="Author" class="text-danger" id="AuthorValidation"></span>
+                                            <label asp-for="@Model.product.Author" class="form-label fw-bold"></label>
+                                            <input asp-for="product.Author" class="form-control" placeholder="Enter Author Name" aria-describedby="AuthorValidation" />
+                                            <span asp-validation-for="product.Author" class="text-danger" id="AuthorValidation"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <!-- Category Dropdown (Disabled) -->
+                                        <!-- Category Dropdown (Enabled) -->
                                         <div class="mb-3">
-                                            <label for="CategoryId" class="form-label fw-bold text-muted">Category</label>
-                                            <select id="CategoryId" class="form-select" disabled>
-                                                <option>Category selection coming soon</option>
-                                                <!-- To enable: Populate options dynamically from controller -->
+                                            <label asp-for="@Model.product.CategoryId" class="form-label fw-bold"></label>
+                                            <select asp-for="product.CategoryId" class="form-select" asp-items="Model.CategoryList">
+                                                <option value="">Select a category</option>
                                             </select>
-                                            <small class="text-muted fst-italic">Category selection will be enabled in future updates</small>
+                                            <span asp-validation-for="product.CategoryId" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="Description" class="form-label fw-bold"></label>
-                                    <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter Description" aria-describedby="DescriptionValidation"></textarea>
-                                    <span asp-validation-for="Description" class="text-danger" id="DescriptionValidation"></span>
+                                    <label asp-for="@Model.product.Description" class="form-label fw-bold"></label>
+                                    <textarea asp-for="product.Description" class="form-control" rows="4" placeholder="Enter Description" aria-describedby="DescriptionValidation"></textarea>
+                                    <span asp-validation-for="product.Description" class="text-danger" id="DescriptionValidation"></span>
                                 </div>
                             </div>
 
@@ -63,15 +62,14 @@
                             <div class="col-md-4">
                                 <!-- Image Upload (Disabled) -->
                                 <div class="mb-3 text-center border rounded p-3 bg-light">
-                                    <label for="ImageUpload" class="form-label fw-bold text-muted">Product Image</label>
+                                    <label for="ImageFile" class="form-label fw-bold">Product Image <span class="text-danger"></span></label>
                                     <div class="mb-2">
-                                        <img src="/images/placeholder.png" style="max-height: 150px; max-width: 100%;" alt="Product Image" class="img-thumbnail mx-auto d-block" />
+                                        <img src="/images/placeholder.png" style="max-height: 150px; max-width: 100%;" alt="Product Image" class="img-thumbnail mx-auto d-block" id="imagePreview" />
                                     </div>
                                     <div class="input-group">
-                                        <input type="file" id="ImageUpload" class="form-control" accept="image/*" disabled />
-                                        <!-- To enable: Add asp-for and validation -->
+                                        <input type="file" id="ImageFile" asp-for="ImageFile" class="form-control" accept="image/*" required />
                                     </div>
-                                    <small class="text-muted fst-italic">Image upload will be enabled in future updates</small>
+                                    <span class="text-danger" asp-validation-for="ImageFile"></span>
                                 </div>
 
                                 <!-- Pricing Section -->
@@ -83,44 +81,44 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="mb-2">
-                                                    <label asp-for="ListPrice" class="form-label fw-bold small"></label>
+                                                    <label asp-for="@Model.product.ListPrice" class="form-label fw-bold small"></label>
                                                     <div class="input-group input-group-sm">
                                                         <span class="input-group-text">$</span>
-                                                        <input asp-for="ListPrice" type="number" step="0.01" class="form-control" placeholder="List Price" aria-describedby="ListPriceValidation" />
+                                                        <input asp-for="product.ListPrice" type="number" step="0.01" class="form-control" placeholder="List Price" aria-describedby="ListPriceValidation" />
                                                     </div>
-                                                    <span asp-validation-for="ListPrice" class="text-danger small" id="ListPriceValidation"></span>
+                                                    <span asp-validation-for="product.ListPrice" class="text-danger small" id="ListPriceValidation"></span>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="mb-2">
-                                                    <label asp-for="Price" class="form-label fw-bold small"></label>
+                                                    <label asp-for="@Model.product.Price" class="form-label fw-bold small"></label>
                                                     <div class="input-group input-group-sm">
                                                         <span class="input-group-text">$</span>
-                                                        <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Price 1-50" aria-describedby="PriceValidation" />
+                                                        <input asp-for="product.Price" type="number" step="0.01" class="form-control" placeholder="Price 1-50" aria-describedby="PriceValidation" />
                                                     </div>
-                                                    <span asp-validation-for="Price" class="text-danger small" id="PriceValidation"></span>
+                                                    <span asp-validation-for="product.Price" class="text-danger small" id="PriceValidation"></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="mb-2">
-                                                    <label asp-for="Price50" class="form-label fw-bold small"></label>
+                                                    <label asp-for="@Model.product.Price50" class="form-label fw-bold small"></label>
                                                     <div class="input-group input-group-sm">
                                                         <span class="input-group-text">$</span>
-                                                        <input asp-for="Price50" type="number" step="0.01" class="form-control" placeholder="Price 50+" aria-describedby="Price50Validation" />
+                                                        <input asp-for="product.Price50" type="number" step="0.01" class="form-control" placeholder="Price 50+" aria-describedby="Price50Validation" />
                                                     </div>
-                                                    <span asp-validation-for="Price50" class="text-danger small" id="Price50Validation"></span>
+                                                    <span asp-validation-for="product.Price50" class="text-danger small" id="Price50Validation"></span>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="mb-2">
-                                                    <label asp-for="Price100" class="form-label fw-bold small"></label>
+                                                    <label asp-for="@Model.product.Price100" class="form-label fw-bold small"></label>
                                                     <div class="input-group input-group-sm">
                                                         <span class="input-group-text">$</span>
-                                                        <input asp-for="Price100" type="number" step="0.01" class="form-control" placeholder="Price 100+" aria-describedby="Price100Validation" />
+                                                        <input asp-for="product.Price100" type="number" step="0.01" class="form-control" placeholder="Price 100" aria-describedby="Price100Validation" />
                                                     </div>
-                                                    <span asp-validation-for="Price100" class="text-danger small" id="Price100Validation"></span>
+                                                    <span asp-validation-for="product.Price100" class="text-danger small" id="Price100Validation"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -149,5 +147,18 @@
 </div>
 
 @section Scripts {
+    <script>
+        document.getElementById('ImageFile').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                document.getElementById('imagePreview').src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
     <partial name="_ValidationScriptsPartial" />
 }

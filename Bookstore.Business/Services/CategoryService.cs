@@ -3,6 +3,8 @@ using Bookstore.Common.Enums;
 using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 namespace Bookstore.Business.Services
 {
     public class CategoryService : ICategoryService
@@ -16,7 +18,7 @@ namespace Bookstore.Business.Services
 
         public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return await _unitOfWork.CategoryRepository.GetAllAsync();
+            return await _unitOfWork.CategoryRepository.GetAll().ToListAsync();
         }
 
         public async Task<Category?> GetCategoryAsync(Expression<Func<Category, bool>> predicate)
@@ -61,6 +63,18 @@ namespace Bookstore.Business.Services
         {
             await _unitOfWork.CategoryRepository.DeleteAsync(id);
             await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task<SelectList> GetSelectListCategories()
+        {
+            var categories = await _unitOfWork.CategoryRepository.GetAll().Select(c =>
+            new
+            {
+                c.Id,
+                c.Name,
+            }).ToListAsync();
+
+            return new SelectList(categories, "Id", "Name");
         }
     }
 }

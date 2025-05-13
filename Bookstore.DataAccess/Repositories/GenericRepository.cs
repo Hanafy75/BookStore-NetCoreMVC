@@ -15,9 +15,9 @@ namespace Bookstore.DataAccess.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public  IQueryable<T> GetAll()
         {
-            return await _context.Set<T>().AsNoTracking().ToListAsync();
+            return _context.Set<T>().AsNoTracking();
         }
 
         public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)

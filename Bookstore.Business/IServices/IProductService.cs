@@ -1,5 +1,8 @@
 ﻿using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
+using Bookstore.DataAccess.ViewModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq.Expressions;
 
 namespace Bookstore.Business.IServices
@@ -8,8 +11,10 @@ namespace Bookstore.Business.IServices
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product?> GetProductAsync(Expression<Func<Product, bool>> predicate);
-        Task<bool> AddProductAsync(Product product);
-        Task<UpdateResult> UpdateAsync(Product product);
+        Task<bool> AddProductAsync(Product product, IFormFile imageFile, string webRootPath);
+        Task<UpdateResult> UpdateAsync(Product product, IFormFile imageFile, string webRootPath);
         Task DeleteAsync(int id);
+        Task<List<ProductIndexViewModel>> GetAllProductsIncludeCategoryAsync();
+        //Task<string> SetImageUrlAsync(IFormFile imageFile, string webRootPath);
     }
 }
