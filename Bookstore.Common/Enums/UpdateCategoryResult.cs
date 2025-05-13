@@ -1,6 +1,6 @@
 ﻿namespace Bookstore.Common.Enums
 {
-    public enum UpdateCategoryResult
+    public enum UpdateResult
     {
         NotFound,
         DuplicateName,

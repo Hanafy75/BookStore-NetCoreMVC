@@ -5,7 +5,7 @@ namespace Bookstore.DataAccess.IRepositories
     public interface IUnitOfWork
     {
         ICategoryRepository CategoryRepository { get; }
-        IGenericRepository<Product> ProductRepository { get; }
+        IProductRepository ProductRepository { get; }
         Task SaveChangesAsync();
     }
 }

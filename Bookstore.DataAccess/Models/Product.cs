@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 namespace Bookstore.DataAccess.Models
 {
     public class Product : IEntity
@@ -39,5 +37,24 @@ namespace Bookstore.DataAccess.Models
         [ValidateNever]
         public string ImageUrl { get; set; } = null!;
         */
+
+
+        /*
+         -- Removed to the Product service layer to make the model clean of logic
+        public bool IsEquivalentTo(Product other)
+        {
+            if (other == null) return false;
+
+            return string.Equals(Title, other.Title, StringComparison.OrdinalIgnoreCase)
+                && Author == other.Author
+                && Description == other.Description
+                && ISBN == other.ISBN
+                && ListPrice == other.ListPrice
+                && Price == other.Price
+                && Price50 == other.Price50
+                && Price100 == other.Price100;
+        }
+        */
+
     }
 }

@@ -6,19 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class ProductController : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
 
-        public CategoryController(ICategoryService categoryService)
+        public ProductController(IProductService productService)
         {
-            _categoryService = categoryService;
+            _productService = productService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var Categories = await _categoryService.GetAllCategoriesAsync();
-            return View(Categories);
+            var products = await _productService.GetAllProductsAsync();
+            return View(products);
         }
 
         #region Create
@@ -31,20 +31,20 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(Product product)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(product);
             }
 
-            var result = await _categoryService.AddCategoryAsync(category);
-            if(!result)
+            var result = await _productService.AddProductAsync(product);
+            if (!result)
             {
-                ModelState.AddModelError("Name","A category with this name already exists.");
-                return View(category);
+                ModelState.AddModelError("Title", "A product with this Title already exists.");
+                return View(product);
             }
-            TempData["success"] = "Category created successfully";
+            TempData["success"] = "product created successfully";
             return RedirectToAction(nameof(Index));
         }
 
@@ -55,62 +55,64 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var Category = await _categoryService.GetCategoryAsync(c => c.Id == id);
-            if (Category == null)
+            var product = await _productService.GetProductAsync(c => c.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(Category);
+            return View(product);
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Category category)
+        public async Task<IActionResult> Edit(Product product)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(product);
             }
 
 
-            var result = await _categoryService.UpdateAsync(category);
+            var result = await _productService.UpdateAsync(product);
             switch (result)
             {
                 case UpdateResult.Updated:
-                TempData["success"] = "Category updated successfully";
-                return RedirectToAction(nameof(Index));
+                    TempData["success"] = "Product updated successfully";
+                    return RedirectToAction(nameof(Index));
 
                 case UpdateResult.NoChanges:
                     TempData["info"] = "No changes detected";
                     return RedirectToAction(nameof(Index));
 
                 case UpdateResult.DuplicateName:
-                    ModelState.AddModelError("Name", "A category with this name already exists.");
-                    return View(category);
+                    ModelState.AddModelError("Title", "A Product with this Title already exists.");
+                    return View(product);
 
                 case UpdateResult.NotFound:
                     return NotFound();
             }
-            return View(category);
+            return View(product);
 
         }
-
+        
         #endregion
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _categoryService.GetCategoryAsync(c => c.Id == id);
-            if (category == null)
+            var product = await _productService.GetProductAsync(c => c.Id == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            await _categoryService.DeleteAsync(id);
+            await _productService.DeleteAsync(id);
 
-            TempData["success"] = "Category deleted successfully";
+            TempData["success"] = "Product deleted successfully";
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

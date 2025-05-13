@@ -1,6 +1,5 @@
 ﻿using Bookstore.DataAccess.Data;
 using Bookstore.DataAccess.IRepositories;
-using Bookstore.DataAccess.Models;
 namespace Bookstore.DataAccess.Repositories
 {
     public class UnitOfWork : IUnitOfWork
@@ -8,9 +7,9 @@ namespace Bookstore.DataAccess.Repositories
         private readonly AppDbContext _context;
         public ICategoryRepository CategoryRepository { get; private set; }
 
-        public IGenericRepository<Product> ProductRepository {  get; private set; }
+        public IProductRepository ProductRepository {  get; private set; }
 
-        public UnitOfWork(AppDbContext context,ICategoryRepository categoryRepository, IGenericRepository<Product> productRepository)
+        public UnitOfWork(AppDbContext context,ICategoryRepository categoryRepository, IProductRepository productRepository)
         {
             _context = context;
             CategoryRepository = categoryRepository;
