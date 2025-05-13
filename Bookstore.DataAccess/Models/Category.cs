@@ -19,6 +19,6 @@ namespace Bookstore.DataAccess.Models
         [NotEqual("Name")]
         public int DisplayOrder { get; set; }
 
-        //public ICollection<Product>? Products { get; set; }
+        public ICollection<Product>? Products { get; set; }
     }
 }

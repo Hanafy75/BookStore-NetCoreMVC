@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 namespace Bookstore.DataAccess.Models
 {
     public class Product : IEntity
@@ -28,15 +29,16 @@ namespace Bookstore.DataAccess.Models
         [Range(1, 1000)]
         public decimal Price100 { get; set; }
 
-        /*
+        
         //Foreing key
         public int CategoryId { get; set; }
 
         [ValidateNever]
         public Category? Category { get; set; }
+
         [ValidateNever]
         public string ImageUrl { get; set; } = null!;
-        */
+
 
 
         /*
