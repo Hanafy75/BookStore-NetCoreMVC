@@ -74,7 +74,7 @@
 									<div class="input-group">
 										<input type="file" id="ImageFile" asp-for="ImageFile" class="form-control" accept="image/*" />
 									</div>
-									<small class="text-muted">Supported extensions: .jpg, .jpeg, .png</small>
+									<small class="text-muted">Supported extensions: .jpg, .webp, .png</small>
 									<span asp-validation-for="ImageFile" class="text-danger"></span>
 								</div>
 
@@ -164,6 +164,8 @@
 				reader.readAsDataURL(file);
 			}
 		});
+
+		
 	</script>
 	<partial name="_ValidationScriptsPartial" />
 }

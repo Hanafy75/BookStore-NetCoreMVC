@@ -3,6 +3,7 @@ using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
 using Bookstore.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
@@ -22,7 +23,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetAllProductsIncludeCategoryAsync();
+            var products = await _productService.GetAllProductsIncludeCategoryNameAsync();
             return View(products);
         }
 
@@ -42,6 +43,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                PviewModel.CategoryList = await _categoryService.GetSelectListCategories();
                 return View(PviewModel);
             }
 
@@ -88,6 +90,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
+                viewModel.CategoryList = await _categoryService.GetSelectListCategories();
                 return View(viewModel);
             }
 

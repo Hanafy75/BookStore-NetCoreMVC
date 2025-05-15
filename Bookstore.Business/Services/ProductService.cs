@@ -23,7 +23,7 @@ namespace Bookstore.Business.Services
             return await _unitOfWork.ProductRepository.GetAll().ToListAsync();
         }
 
-        public async Task<List<ProductIndexViewModel>> GetAllProductsIncludeCategoryAsync()
+        public async Task<List<ProductIndexViewModel>> GetAllProductsIncludeCategoryNameAsync()
         {
             return await _unitOfWork.ProductRepository.GetAll().Include(c => c.Category)
                 .Select(pc =>
@@ -32,7 +32,6 @@ namespace Bookstore.Business.Services
                     Id = pc.Id,
                     Title = pc.Title,
                     Author = pc.Author,
-                    Description = pc.Description,
                     ISBN = pc.ISBN,
                     ListPrice = pc.ListPrice,
                     CategoryName = pc.Category!.Name
