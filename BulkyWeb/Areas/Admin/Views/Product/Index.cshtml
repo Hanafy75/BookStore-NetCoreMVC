@@ -12,6 +12,13 @@
             </a>
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <form id="searchForm" role="search">
+                <input class="form-control" type="search" id="searchInput" placeholder="Search by Title, Author, or ISBN" aria-label="Search">
+            </form>
+        </div>
+    </div>
 
     <!-- Loading Spinner -->
     <div id="loadingSpinner" class="d-none text-center my-3">
@@ -53,5 +60,5 @@
             getProductsUrl: '@Url.Action("GetProducts", "Product", new { area = "Admin" })'
         };
     </script>
-    <script src="~/js/product/product.js" asp-append-version="true"></script>
+    <script src="~/js/Product/product.js" asp-append-version="true"></script>
 }
