@@ -3,7 +3,6 @@ using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
 using Bookstore.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
@@ -21,10 +20,12 @@ namespace BulkyWeb.Areas.Admin.Controllers
             this._webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 4)
         {
-            var products = await _productService.GetAllProductsIncludeCategoryNameAsync();
-            return View(products);
+            var products = _productService.GetAllProductsIncludeCategoryName();
+            var paginatedList = await PaginatedList<ProductIndexViewModel>.CreateAsync(products, pageIndex, pageSize);
+            return View(paginatedList);
         }
 
         #region Create
@@ -47,7 +48,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 return View(PviewModel);
             }
 
-            var result = await _productService.AddProductAsync(PviewModel.product,PviewModel.ImageFile,_webHostEnvironment.WebRootPath);
+            var result = await _productService.AddProductAsync(PviewModel.product, PviewModel.ImageFile, _webHostEnvironment.WebRootPath);
             if (!result)
             {
                 ModelState.AddModelError("Title", "A product with this Title already exists.");
@@ -82,7 +83,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductEditViewModel viewModel)
@@ -95,7 +96,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
 
 
-            var result = await _productService.UpdateAsync(viewModel.product, viewModel.ImageFile,_webHostEnvironment.WebRootPath);
+            var result = await _productService.UpdateAsync(viewModel.product, viewModel.ImageFile, _webHostEnvironment.WebRootPath);
             switch (result)
             {
                 case UpdateResult.Updated:
@@ -116,9 +117,10 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return View(viewModel);
 
         }
-        
+
         #endregion
 
+        #region Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -135,5 +137,25 @@ namespace BulkyWeb.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+        #region Ajax Call
+        [HttpGet]
+        public async Task<IActionResult> GetProducts(int pageIndex = 1, int pageSize = 4)
+        {
+            if (pageIndex < 1 || pageSize < 1) return BadRequest("Invalid page index or page size.");
+
+            var products = _productService.GetAllProductsIncludeCategoryName();
+
+            var paginatedList = await PaginatedList<ProductIndexViewModel>.CreateAsync(products, pageIndex, pageSize);
+
+
+            if (paginatedList.TotalPages > 0 && pageIndex > paginatedList.TotalPages) return NotFound("Page not found.");
+
+
+            return PartialView("_ProductList", paginatedList);
+        }
+
+        #endregion
     }
 }

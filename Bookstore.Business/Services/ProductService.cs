@@ -23,9 +23,9 @@ namespace Bookstore.Business.Services
             return await _unitOfWork.ProductRepository.GetAll().ToListAsync();
         }
 
-        public async Task<List<ProductIndexViewModel>> GetAllProductsIncludeCategoryNameAsync()
+        public  IQueryable<ProductIndexViewModel> GetAllProductsIncludeCategoryName()
         {
-            return await _unitOfWork.ProductRepository.GetAll().Include(c => c.Category)
+            return  _unitOfWork.ProductRepository.GetAll().Include(c => c.Category)
                 .Select(pc =>
                 new ProductIndexViewModel
                 {
@@ -35,7 +35,7 @@ namespace Bookstore.Business.Services
                     ISBN = pc.ISBN,
                     ListPrice = pc.ListPrice,
                     CategoryName = pc.Category!.Name
-                }).ToListAsync();
+                });
         }
 
         public async Task<Product?> GetProductAsync(Expression<Func<Product, bool>> predicate)
