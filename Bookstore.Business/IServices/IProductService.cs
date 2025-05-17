@@ -11,6 +11,8 @@ namespace Bookstore.Business.IServices
     {
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product?> GetProductAsync(Expression<Func<Product, bool>> predicate);
+        public  Task<Product?> GetProductWithCategoryAsync(Expression<Func<Product, bool>> predicate);
+
         Task<bool> AddProductAsync(Product product, IFormFile imageFile, string webRootPath);
         Task<UpdateResult> UpdateAsync(Product product, IFormFile imageFile, string webRootPath);
         Task DeleteAsync(int id, string webRootPath);

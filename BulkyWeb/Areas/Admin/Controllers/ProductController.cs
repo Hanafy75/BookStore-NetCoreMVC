@@ -21,7 +21,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 4, string searchTerm = null)
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, string searchTerm = null)
         {
             var products = _productService.GetAllProductsIncludeCategoryName();
 
@@ -145,7 +145,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         #region Ajax Call
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int pageIndex = 1, int pageSize = 4, string searchTerm = null)
+        public async Task<IActionResult> GetProducts(int pageIndex = 1, int pageSize = 10, string searchTerm = null)
         {
             if (pageIndex < 1 || pageSize < 1) return BadRequest("Invalid page index or page size.");
 

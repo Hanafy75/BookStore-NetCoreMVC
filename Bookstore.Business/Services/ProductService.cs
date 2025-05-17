@@ -4,9 +4,7 @@ using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
 using Bookstore.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Linq.Expressions;
 
 namespace Bookstore.Business.Services
@@ -43,6 +41,13 @@ namespace Bookstore.Business.Services
         public async Task<Product?> GetProductAsync(Expression<Func<Product, bool>> predicate)
         {
             return await _unitOfWork.ProductRepository.GetAsync(predicate);
+        }
+
+        public async Task<Product?> GetProductWithCategoryAsync(Expression<Func<Product, bool>> predicate)
+        {
+            var product = await _unitOfWork.ProductRepository.GetAsync(predicate);
+            product.Category = await _unitOfWork.CategoryRepository.GetAsync(c => c.Id == product.CategoryId);
+            return product;
         }
 
         public async Task<bool> AddProductAsync(Product product, IFormFile imageFile, string webRootPath)
