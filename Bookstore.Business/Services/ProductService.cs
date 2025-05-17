@@ -4,7 +4,9 @@ using Bookstore.DataAccess.IRepositories;
 using Bookstore.DataAccess.Models;
 using Bookstore.DataAccess.ViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Linq.Expressions;
 
 namespace Bookstore.Business.Services
@@ -23,9 +25,9 @@ namespace Bookstore.Business.Services
             return await _unitOfWork.ProductRepository.GetAll().ToListAsync();
         }
 
-        public  IQueryable<ProductIndexViewModel> GetAllProductsIncludeCategoryName()
+        public IQueryable<ProductIndexViewModel> GetAllProductsIncludeCategoryName()
         {
-            return  _unitOfWork.ProductRepository.GetAll().Include(c => c.Category)
+            return _unitOfWork.ProductRepository.GetAll().Include(c => c.Category)
                 .Select(pc =>
                 new ProductIndexViewModel
                 {
@@ -57,6 +59,7 @@ namespace Bookstore.Business.Services
 
         public async Task<UpdateResult> UpdateAsync(Product product, IFormFile imageFile, string webRootPath)
         {
+            // Get the original product
             var oldProduct = await _unitOfWork.ProductRepository.GetAsync(c => c.Id == product.Id);
             if (oldProduct == null) return UpdateResult.NotFound;
 
@@ -64,58 +67,76 @@ namespace Bookstore.Business.Services
             if (!String.Equals(oldProduct.Title, product.Title, StringComparison.OrdinalIgnoreCase) &&
                 await _unitOfWork.ProductRepository.IsProductNameExistsAsync(product.Title, product.Id)) return UpdateResult.DuplicateName;
 
-
+            // Handle image processing if a new image was uploaded
             if (imageFile != null)
-            {
-
-                if (!String.IsNullOrEmpty(oldProduct.ImageUrl))
-                {
-                    var oldImagePath = Path.Combine(webRootPath, oldProduct.ImageUrl.TrimStart('\\'));
-                    if (File.Exists(oldImagePath))
-                    {
-                        File.Delete(oldImagePath);
-                    }
-                }
-
-                product.ImageUrl = await SetImageUrlAsync(imageFile, webRootPath);
-
-
-                oldProduct.Title = product.Title;
-                oldProduct.Description = product.Description;
-                oldProduct.Author = product.Author;
-                oldProduct.ISBN = product.ISBN;
-                oldProduct.ListPrice = product.ListPrice;
-                oldProduct.Price = product.Price;
-                oldProduct.Price50 = product.Price50;
-                oldProduct.Price100 = product.Price100;
-                oldProduct.CategoryId = product.CategoryId;
-                oldProduct.ImageUrl = product.ImageUrl;
-
-                _unitOfWork.ProductRepository.Update(oldProduct);
-                await _unitOfWork.SaveChangesAsync();
-
-                return UpdateResult.Updated;
-            }
-            //check fo no changes
-            if (CheckForNoChanges(oldProduct, product) == UpdateResult.NoChanges) 
+                 await HandleImageUpdate(oldProduct, product, imageFile, webRootPath);
+            else if (CheckForNoChanges(oldProduct, product) == UpdateResult.NoChanges)
                 return UpdateResult.NoChanges;
-            else
-            {
-                oldProduct.Title = product.Title;
-                oldProduct.Description = product.Description;
-                oldProduct.Author = product.Author;
-                oldProduct.ISBN = product.ISBN;
-                oldProduct.ListPrice = product.ListPrice;
-                oldProduct.Price = product.Price;
-                oldProduct.Price50 = product.Price50;
-                oldProduct.Price100 = product.Price100;
-                oldProduct.CategoryId = product.CategoryId;
-                _unitOfWork.ProductRepository.Update(oldProduct);
-                await _unitOfWork.SaveChangesAsync();
-                return UpdateResult.Updated;
-            }
+
+
+            // Update product properties
+            UpdateProductProperties(oldProduct, product);
+
+
+            //save changes
+            _unitOfWork.ProductRepository.Update(oldProduct);
+            await _unitOfWork.SaveChangesAsync();
+
+            return UpdateResult.Updated;
         }
 
+        public async Task DeleteAsync(int id, string webRootPath)
+        {
+            var product = await GetProductAsync(c => c.Id == id);
+
+            if (product == null) return;
+
+            if (!String.IsNullOrEmpty(product.ImageUrl))
+            {
+                string imgPath = Path.Combine(webRootPath, product.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(imgPath))
+                    File.Delete(imgPath);
+            }
+
+            await _unitOfWork.ProductRepository.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        #region Helpers
+        private async Task HandleImageUpdate(Product oldProduct, Product product, IFormFile imageFile, string webRootPath)
+        {
+            // Delete old image if it exists
+            if (!String.IsNullOrEmpty(oldProduct.ImageUrl))
+            {
+                var oldImagePath = Path.Combine(webRootPath, oldProduct.ImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(oldImagePath))
+                {
+                    File.Delete(oldImagePath);
+                }
+            }
+
+            // Set the new image URL
+            product.ImageUrl = await SetImageUrlAsync(imageFile, webRootPath);
+        }
+
+        private void UpdateProductProperties(Product oldProduct, Product product)
+        {
+            oldProduct.Title = product.Title;
+            oldProduct.Description = product.Description;
+            oldProduct.Author = product.Author;
+            oldProduct.ISBN = product.ISBN;
+            oldProduct.ListPrice = product.ListPrice;
+            oldProduct.Price = product.Price;
+            oldProduct.Price50 = product.Price50;
+            oldProduct.Price100 = product.Price100;
+            oldProduct.CategoryId = product.CategoryId;
+
+            // Only update ImageUrl if it has been set (when an image file was uploaded)
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                oldProduct.ImageUrl = product.ImageUrl;
+            }
+        }
 
         private static UpdateResult CheckForNoChanges(Product Old, Product New)
         {
@@ -127,7 +148,7 @@ namespace Bookstore.Business.Services
             return UpdateResult.Updated;
         }
 
-        public static async Task<string> SetImageUrlAsync(IFormFile imageFile, string webRootPath)
+        private  async Task<string> SetImageUrlAsync(IFormFile imageFile, string webRootPath)
         {
             if (imageFile != null && imageFile.Length > 0)
             {
@@ -155,10 +176,7 @@ namespace Bookstore.Business.Services
             }
             return string.Empty;
         }
-        public async Task DeleteAsync(int id)
-        {
-            await _unitOfWork.ProductRepository.DeleteAsync(id);
-            await _unitOfWork.SaveChangesAsync();
-        }
+
+        #endregion
     }
 }

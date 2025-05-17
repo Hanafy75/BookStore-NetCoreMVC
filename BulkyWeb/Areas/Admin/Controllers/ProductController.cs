@@ -135,13 +135,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _productService.GetProductAsync(c => c.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            await _productService.DeleteAsync(id);
+            await _productService.DeleteAsync(id, _webHostEnvironment.WebRootPath);
 
             TempData["success"] = "Product deleted successfully";
             return RedirectToAction(nameof(Index));

@@ -13,7 +13,7 @@ namespace Bookstore.Business.IServices
         Task<Product?> GetProductAsync(Expression<Func<Product, bool>> predicate);
         Task<bool> AddProductAsync(Product product, IFormFile imageFile, string webRootPath);
         Task<UpdateResult> UpdateAsync(Product product, IFormFile imageFile, string webRootPath);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(int id, string webRootPath);
         public IQueryable<ProductIndexViewModel> GetAllProductsIncludeCategoryName();
         //Task<string> SetImageUrlAsync(IFormFile imageFile, string webRootPath);
     }
