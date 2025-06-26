@@ -2,11 +2,13 @@
 using Bookstore.Common.Enums;
 using Bookstore.DataAccess.Models;
 using Bookstore.DataAccess.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
