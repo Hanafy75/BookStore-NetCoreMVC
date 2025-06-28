@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bookstore.DataAccess.Models
 {
-    public class Company
+    public class Company :IEntity
     {
         public int Id { get; set; }
 
