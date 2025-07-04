@@ -1,0 +1,72 @@
+﻿@model UserViewModel
+<div class="card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h2 class="text-white py-2">Manage User Role</h2>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<form method="post" class="row">
+			<input asp-for="User.Id" hidden />
+			<div class="border p-3">
+				@*<div asp-validation-summary="ModelOnly"></div>*@
+				<div class="form-floating py-2 col-12">
+					<input asp-for="User.Name" readonly class="form-control border-0 shadow" />
+					<label asp-for="User.Name" class="ms-2"></label>
+				</div>
+				<div class="form-floating py-2 col-12">
+					<select asp-for="User.Role" asp-items="@Model.Roles" class="form-select"></select>
+					<label asp-for="User.Role" class="ms-2"></label>
+				</div>
+				<div class="form-floating py-2 col-12" id="companyDropdown" style="@(Model.User.Role == Roles.Company ? "display:block;" : "display:none;")">
+					<select asp-for="User.CompanyId" asp-items="@Model.Companies" class="form-select">
+						<option value="">Select Company</option>
+					</select>
+					<label asp-for="User.CompanyId" class="ms-2"></label>
+				</div>
+				<div class="row pt-2">
+					<div class="col-6 col-md-3">
+						<button type="submit" class="btn btn-primary form-control">Save</button>
+					</div>
+					<div class="col-6 col-md-3">
+						<a asp-action="Index" class="btn btn-outline-primary border  form-control">
+							Back to List
+						</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+@section Scripts {
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+	<script>
+		$(document).ready(function () {
+			// Function to toggle company dropdown visibility
+			function toggleCompanyDropdown() {
+				var selectedRole = $('#User_Role').val();
+				var companyDropdown = $('#companyDropdown');
+
+				if (selectedRole === '@Roles.Company') {
+					companyDropdown.show();
+				} else {
+					companyDropdown.hide();
+					// Reset company selection when hiding
+					$('#User_CompanyId').val('');
+				}
+			}
+
+			// Handle role change
+			$('#User_Role').change(function () {
+				toggleCompanyDropdown();
+			});
+
+			// Initialize on page load
+			toggleCompanyDropdown();
+		});
+	</script>
+}

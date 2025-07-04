@@ -1,0 +1,41 @@
+﻿@model PaginatedList<ApplicationUser>
+<div class="container">
+	<!-- Header -->
+	<div class="row align-items-center py-3">
+		<div class="col-6">
+			<h2 class="text-primary mb-0">Users List</h2>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12">
+			<form id="searchForm" role="search">
+				<input class="form-control" type="search" id="searchInput" placeholder="Search by Name, Phone Number, Status, or Email" aria-label="Search">
+			</form>
+		</div>
+	</div>
+	<!-- Loading Spinner -->
+	<div id="loadingSpinner" class="d-none text-center my-3">
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+	</div>
+	<!-- User Table and Pagination -->
+	<div id="userContainer" aria-live="polite">
+		@await Html.PartialAsync("_UserList", Model)
+	</div>
+
+	<!-- Hidden form for anti-forgery token -->
+	<form style="display: none;">
+		@Html.AntiForgeryToken()
+	</form>
+</div>
+@section Scripts {
+	<script>
+		// Pass server-generated URLs to JavaScript
+		window.appSettings = {
+			getUsersUrl: '@Url.Action("GetUsers", "User", new { area = "Admin" })',
+			lockUnlockUrl: '@Url.Action("LockUnLock", "User", new { area = "Admin" })'
+		};
+	</script>
+	<script src="~/js/User/user.js" asp-append-version="true"></script>
+}

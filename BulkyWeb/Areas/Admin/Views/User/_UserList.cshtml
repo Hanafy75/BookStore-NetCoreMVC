@@ -1,0 +1,81 @@
+﻿@model PaginatedList<ApplicationUser>
+<div class="card shadow border-0 mt-3">
+	<div class="card-body p-4">
+		<table class="table table-bordered table-striped table-hover">
+			<thead class="table-primary">
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Phone Number</th>
+					<th>Company</th>
+					<th>Role</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var user in Model.Items)
+				{
+					<tr>
+						<td>@user.Name</td>
+						<td>@user.Email</td>
+						<td>@user.PhoneNumber</td>
+						<td>@(user.Company?.Name ?? "N/A")</td>
+						<td>@user.Role</td>
+						<td>
+							@if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.Now)
+							{
+								<span class="badge bg-danger">Locked</span>
+							}
+							else
+							{
+								<span class="badge bg-success">Active</span>
+							}
+						</td>
+						<td>
+							@if (user.LockoutEnd != null && user.LockoutEnd > DateTimeOffset.Now)
+							{
+								<!-- User is locked - show unlock button -->
+								<button type="button" class="btn btn-success btn-sm lock-unlock-btn me-1"
+										data-user-id="@user.Id"
+										data-action="unlock"
+										title="Unlock User">
+									<i class="bi bi-unlock"></i> Unlock
+								</button>
+							}
+							else
+							{
+								<!-- User is unlocked - show lock button -->
+								<button type="button" class="btn btn-warning btn-sm lock-unlock-btn me-1"
+										data-user-id="@user.Id"
+										data-action="lock"
+										title="Lock User">
+									<i class="bi bi-lock"></i> Lock
+								</button>
+							}
+							<a asp-action="Edit" asp-area="Admin" asp-route-id="@user.Id" class="btn btn-outline-primary btn-sm">
+								<i class="bi bi-pencil-square"></i> Edit
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<nav aria-label="User pagination" class="mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item @(Model.HasPrev ? "" : "disabled")">
+					<a class="page-link" href="@(Model.HasPrev? Url.Action("Index", "User", new { area = "Admin", pageIndex = Model.PageIndex - 1, pageSize = Model.PageSize }) : "#")" data-page="@(Model.PageIndex - 1)" data-size="@Model.PageSize" @(Model.HasPrev ? "" : "aria-disabled='true'")>Previous</a>
+				</li>
+				@for (var i = 1; i <= Model.TotalPages; i++)
+				{
+					<li class="page-item @(i == Model.PageIndex ? "active" : "")">
+						<a class="page-link" href="@Url.Action("Index", "User", new { area = "Admin", pageIndex = i, pageSize = Model.PageSize })" data-page="@i" data-size="@Model.PageSize">@i</a>
+					</li>
+				}
+				<li class="page-item @(Model.HasNext ? "" : "disabled")">
+					<a class="page-link" href="@(Model.HasNext? Url.Action("Index", "User", new { area = "Admin", pageIndex = Model.PageIndex + 1, pageSize = Model.PageSize }) : "#")" data-page="@(Model.PageIndex + 1)" data-size="@Model.PageSize" @(Model.HasNext ? "" : "aria-disabled='true'")>Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>

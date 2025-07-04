@@ -29,6 +29,11 @@ namespace Bookstore.DataAccess.Repositories
         {
             await _context.Users.AddAsync(entity);
         }
+        public async Task UpdateAsync(ApplicationUser entity)
+        {
+            _context.Users.Update(entity);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task DeleteAsync(string id)
         {
@@ -36,6 +41,11 @@ namespace Bookstore.DataAccess.Repositories
             if (entity == null) throw new KeyNotFoundException($"Category with ID {id} not found.");
 
             _context.Users.Remove(entity);
+        }
+
+        public async Task<ApplicationUser>? GetUserIncludeCompanyAsync(Expression<Func<ApplicationUser, bool>> predicate)
+        {
+            return await _context.Users.Where(predicate).Include(u=> u.Company).FirstOrDefaultAsync();
         }
     }
 }

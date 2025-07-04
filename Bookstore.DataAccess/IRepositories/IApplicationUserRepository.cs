@@ -12,8 +12,11 @@ namespace Bookstore.DataAccess.IRepositories
     {
         IQueryable<ApplicationUser> GetAll();
         Task<ApplicationUser>? GetAsync(Expression<Func<ApplicationUser, bool>> predicate);
+        Task<ApplicationUser>? GetUserIncludeCompanyAsync(Expression<Func<ApplicationUser, bool>> predicate);
 
         Task AddAsync(ApplicationUser entity);
+        Task UpdateAsync(ApplicationUser entity);
+
         Task DeleteAsync(string id);
 
 
