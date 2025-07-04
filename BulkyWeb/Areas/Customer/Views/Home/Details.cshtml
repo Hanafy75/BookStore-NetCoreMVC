@@ -1,0 +1,85 @@
+﻿@model ShoppingCart
+
+<form method="post">
+	<input hidden asp-for="ProductId" />
+	<div class="container-fluid py-4 pb-5">
+		<div class="row justify-content-center">
+			<div class="col-md-11">
+				<div class="card shadow border-0">
+					<div class="card-header bg-primary text-white py-3">
+						<div class="row">
+							<div class="col-12 text-center">
+								<h3 class="text-white text-uppercase">@Model.Product.Title</h3>
+								<p class="text-white-50 fw-semibold mb-0">by @Model.Product.Author</p>
+							</div>
+						</div>
+					</div>
+					<div class="card-body p-4">
+						<div class="row mb-3">
+							<div class="col-md-2">
+								<a asp-action="Index" class="btn btn-outline-primary bg-gradient fw-semibold btn-sm text-uppercase ms-0">
+									<small>Back to Home</small>
+								</a>
+							</div>
+						</div>
+						<div class="row align-items-start">
+							<div class="col-12 col-lg-3 text-center mb-3">
+								<img src="@(string.IsNullOrEmpty(Model.Product.ImageUrl) ? "/images/placeholder.png" : Model.Product.ImageUrl)"
+									 style="max-height: 300px; width: 100%; object-fit: contain;"
+									 alt="@Model.Product.Title"
+									 class="img-thumbnail mx-auto d-block"
+									 loading="lazy" />
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="mb-3">
+									<span class="badge">@Model.Product.Category.Name</span>
+								</div>
+								<div class="mb-3">
+									<h6 class="text-dark text-opacity-50 text-center">ISBN: @Model.Product.ISBN</h6>
+								</div>
+								<div class="mb-3">
+									<h6 class="text-dark text-opacity-50">
+										List Price: <span class="text-decoration-line-through">@Model.Product.ListPrice.ToString("c")</span>
+									</h6>
+								</div>
+								<div class="pricing-table mb-4">
+									<div class="row text-center g-0">
+										<div class="col-3 col-lg-2 p-2 bg-light border-bottom fw-semibold">Quantity</div>
+										<div class="col-3 col-lg-2 p-2 bg-light border-bottom fw-semibold">1-50</div>
+										<div class="col-3 col-lg-2 p-2 bg-light border-bottom fw-semibold">51-100</div>
+										<div class="col-3 col-lg-2 p-2 bg-light border-bottom fw-semibold">100+</div>
+									</div>
+									<div class="row text-center g-0">
+										<div class="col-3 col-lg-2 p-2 bg-light text-warning fw-bold">Price</div>
+										<div class="col-3 col-lg-2 p-2 bg-light text-warning fw-bold">@Model.Product.Price.ToString("c")</div>
+										<div class="col-3 col-lg-2 p-2 bg-light text-warning fw-bold">@Model.Product.Price50.ToString("c")</div>
+										<div class="col-3 col-lg-2 p-2 bg-light text-warning fw-bold">@Model.Product.Price100.ToString("c")</div>
+									</div>
+								</div>
+								<div class="mb-3">
+									<p class="text-secondary lh-sm">@Html.Raw(Model.Product.Description)</p>
+								</div>
+								<div class="row mb-3">
+									<div class="col-md-6">
+										<div class="input-group">
+											<span class="input-group-text bg-primary text-white border-0 fw-semibold" id="quantity-label">Count</span>
+											<input asp-for="Count" type="number" value="1" class="form-control text-end" min="1"
+												   aria-label="Quantity" aria-describedby="quantity-label" id="quantity" />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col text-end">
+										<button asp-action="Details" type="submit" class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
+											Add to Cart
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,106 @@
+﻿@model List<Category>
+
+<div class="container">
+	<!-- Header and Button Row -->
+	<div class="row align-items-center py-3">
+		<div class="col-6">
+			<h2 class="text-primary mb-0">Category List</h2>
+		</div>
+		<div class="col-6 text-end">
+			<a asp-action="Create" class="btn btn-primary">
+				<i class="bi bi-plus-circle"></i> Create New Category
+			</a>
+		</div>
+	</div>
+
+	<!-- Table in Card -->
+	<div class="card shadow border-0 mt-3">
+		<div class="card-body p-4">
+			<table class="table table-bordered table-striped table-hover">
+				<thead class="table-primary">
+					<tr>
+						<th>Name</th>
+						<th>Display Order</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var obj in Model)
+					{
+						<tr>
+							<td>@obj.Name</td>
+							<td>@obj.DisplayOrder</td>
+							<td>
+								<a asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-outline-primary btn-sm me-1">
+									<i class="bi bi-pencil-square"></i> Edit
+								</a>
+								<form asp-action="Delete" asp-route-id="@obj.Id" method="post" style="display:inline;">
+									<button type="button" class="btn btn-danger btn-sm delete-btn" data-category-name="@obj.Name">
+										<i class="bi bi-trash"></i> Delete
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Are you sure you want to delete the category "<span id="categoryNameToDelete"></span>"?</p>
+				<p class="text-danger"><small>This action cannot be undone.</small></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+
+		$(document).ready(function() {
+			// Variables to store the form that needs to be submitted
+			let formToSubmit = null;
+
+			// Set up click handler using event delegation
+			$(document).on('click', '.delete-btn', function() {
+				// Store the form element
+				formToSubmit = $(this).closest('form');
+
+				// Get the category name from data attribute
+				const categoryName = $(this).data('category-name');
+
+				// Set the category name in the modal
+				$('#categoryNameToDelete').text(categoryName);
+
+				// Show the modal
+				$('#deleteConfirmationModal').modal('show');
+			});
+
+			// Handle the confirm button click
+			$(document).on('click', '#confirmDeleteBtn', function() {
+				// Submit the form if it exists
+				if (formToSubmit) {
+					formToSubmit.submit();
+				}
+
+				// Hide the modal
+				$('#deleteConfirmationModal').modal('hide');
+			});
+		});
+	</script>
+}

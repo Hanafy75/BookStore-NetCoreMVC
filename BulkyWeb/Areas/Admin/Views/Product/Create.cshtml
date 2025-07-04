@@ -1,0 +1,164 @@
+﻿@model ProductCreateViewModel
+
+<div class="container-fluid py-4 mb-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow-sm" style="min-height: 600px;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create New Product</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <!-- Left Column - Main Information -->
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="@Model.product.Title" class="form-label fw-bold"></label>
+                                            <input asp-for="product.Title" class="form-control" placeholder="Enter Product name" aria-describedby="TitleValidation" />
+                                            <span asp-validation-for="product.Title" class="text-danger" id="TitleValidation"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="@Model.product.ISBN" class="form-label fw-bold"></label>
+                                            <input asp-for="product.ISBN" class="form-control" placeholder="Enter ISBN" aria-describedby="ISBNValidation" />
+                                            <span asp-validation-for="product.ISBN" class="text-danger" id="ISBNValidation"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="@Model.product.Author" class="form-label fw-bold"></label>
+                                            <input asp-for="product.Author" class="form-control" placeholder="Enter Author Name" aria-describedby="AuthorValidation" />
+                                            <span asp-validation-for="product.Author" class="text-danger" id="AuthorValidation"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Category Dropdown (Enabled) -->
+                                        <div class="mb-3">
+                                            <label asp-for="@Model.product.CategoryId" class="form-label fw-bold"></label>
+                                            <select asp-for="product.CategoryId" class="form-select" asp-items="Model.CategoryList">
+                                                <option value="">Select a category</option>
+                                            </select>
+                                            <span asp-validation-for="product.CategoryId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="@Model.product.Description" class="form-label fw-bold"></label>
+                                    <textarea asp-for="product.Description" class="form-control" rows="4" placeholder="Enter Description" aria-describedby="DescriptionValidation"></textarea>
+                                    <span asp-validation-for="product.Description" class="text-danger" id="DescriptionValidation"></span>
+                                </div>
+                            </div>
+
+                            <!-- Right Column - Pricing and Image -->
+                            <div class="col-md-4">
+                                <!-- Image Upload (Disabled) -->
+                                <div class="mb-3 text-center border rounded p-3 bg-light">
+                                    <label for="ImageFile" class="form-label fw-bold">Product Image <span class="text-danger"></span></label>
+                                    <div class="mb-2">
+                                        <img src="/images/placeholder.png" style="max-height: 150px; max-width: 100%;" alt="Product Image" class="img-thumbnail mx-auto d-block" id="imagePreview" />
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="file" id="ImageFile" asp-for="ImageFile" class="form-control" accept="image/*" required />
+                                    </div>
+                                    <span class="text-danger" asp-validation-for="ImageFile"></span>
+                                </div>
+
+                                <!-- Pricing Section -->
+                                <div class="card mt-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">Pricing</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-2">
+                                                    <label asp-for="@Model.product.ListPrice" class="form-label fw-bold small"></label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-text">$</span>
+                                                        <input asp-for="product.ListPrice" type="number" step="0.01" class="form-control" placeholder="List Price" aria-describedby="ListPriceValidation" />
+                                                    </div>
+                                                    <span asp-validation-for="product.ListPrice" class="text-danger small" id="ListPriceValidation"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-2">
+                                                    <label asp-for="@Model.product.Price" class="form-label fw-bold small"></label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-text">$</span>
+                                                        <input asp-for="product.Price" type="number" step="0.01" class="form-control" placeholder="Price 1-50" aria-describedby="PriceValidation" />
+                                                    </div>
+                                                    <span asp-validation-for="product.Price" class="text-danger small" id="PriceValidation"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="mb-2">
+                                                    <label asp-for="@Model.product.Price50" class="form-label fw-bold small"></label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-text">$</span>
+                                                        <input asp-for="product.Price50" type="number" step="0.01" class="form-control" placeholder="Price 50+" aria-describedby="Price50Validation" />
+                                                    </div>
+                                                    <span asp-validation-for="product.Price50" class="text-danger small" id="Price50Validation"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="mb-2">
+                                                    <label asp-for="@Model.product.Price100" class="form-label fw-bold small"></label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-text">$</span>
+                                                        <input asp-for="product.Price100" type="number" step="0.01" class="form-control" placeholder="Price 100" aria-describedby="Price100Validation" />
+                                                    </div>
+                                                    <span asp-validation-for="product.Price100" class="text-danger small" id="Price100Validation"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Create
+                                </button>
+                            </div>
+                            <div>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('ImageFile').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                document.getElementById('imagePreview').src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

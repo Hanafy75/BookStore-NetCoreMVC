@@ -1,0 +1,58 @@
+﻿@model PaginatedList<Company>
+
+<div class="card shadow border-0 mt-3">
+    <div class="card-body p-4">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Phone Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var company in Model.Items)
+                {
+                    <tr>
+                        <td>@company.Name</td>
+                        <td>@company.StreetAddress</td>
+                        <td>@company.City</td>
+                        <td>@company.State</td>
+                        <td>@company.PhoneNumber</td>
+                        <td>
+                            <a asp-action="Edit" asp-area="Admin" asp-route-id="@company.Id" class="btn btn-outline-primary btn-sm me-1">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <form asp-action="Delete" asp-area="Admin" asp-route-id="@company.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-company-name="@company.Name">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <nav aria-label="Company pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.HasPrev ? "" : "disabled")">
+                    <a class="page-link" href="@(Model.HasPrev ? Url.Action("Index", "Company", new { area = "Admin", pageIndex = Model.PageIndex - 1, pageSize = Model.PageSize }) : "#")" data-page="@(Model.PageIndex - 1)" data-size="@Model.PageSize" @(Model.HasPrev ? "" : "aria-disabled='true'")>Previous</a>
+                </li>
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", "Company", new { area = "Admin", pageIndex = i, pageSize = Model.PageSize })" data-page="@i" data-size="@Model.PageSize">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                    <a class="page-link" href="@(Model.HasNext ? Url.Action("Index", "Company", new { area = "Admin", pageIndex = Model.PageIndex + 1, pageSize = Model.PageSize }) : "#")" data-page="@(Model.PageIndex + 1)" data-size="@Model.PageSize" @(Model.HasNext ? "" : "aria-disabled='true'")>Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+﻿@model PaginatedList<Order>
+
+<div class="container">
+	<!-- Header -->
+	<div class="row align-items-center py-3">
+		<div class="col-6">
+			<h2 class="text-primary mb-0">Order List</h2>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col-12">
+			<form id="searchForm" role="search">
+				<input class="form-control" type="search" id="searchInput" placeholder="Search by Name, Phone Number, Status, or Email" aria-label="Search">
+			</form>
+		</div>
+	</div>
+
+	<!-- Loading Spinner -->
+	<div id="loadingSpinner" class="d-none text-center my-3">
+		<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+		</div>
+	</div>
+
+	<!-- Order Table and Pagination -->
+	<div id="orderContainer" aria-live="polite">
+		@await Html.PartialAsync("_OrderList", Model)
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		// Pass server-generated URL to JavaScript
+		window.appSettings = {
+			getOrdersUrl: '@Url.Action("GetOrders", "Order", new { area = "Admin" })'
+		};
+	</script>
+	<script src="~/js/Order/order.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,78 @@
+﻿@model Company
+<div class="container-fluid py-4 mb-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-11">
+            <div class="card shadow-sm" style="min-height: 600px;">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create New Company</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <!-- Left Column - Main Information -->
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Name" class="form-label fw-bold"></label>
+                                            <input asp-for="Name" class="form-control" placeholder="Enter Company name" aria-describedby="NameValidation" />
+                                            <span asp-validation-for="Name" class="text-danger" id="NameValidation"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="StreetAddress" class="form-label fw-bold"></label>
+                                            <input asp-for="StreetAddress" class="form-control" placeholder="Enter Street Address" aria-describedby="StreetAddressValidation" />
+                                            <span asp-validation-for="StreetAddress" class="text-danger" id="StreetAddressValidation"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="State" class="form-label fw-bold"></label>
+                                            <input asp-for="State" class="form-control" placeholder="Enter State Name" aria-describedby="StateValidation" />
+                                            <span asp-validation-for="State" class="text-danger" id="StateValidation"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="PostalCode" class="form-label fw-bold"></label>
+                                    <input asp-for="PostalCode" class="form-control" placeholder="Enter Postal Code" aria-describedby="PostalCodeValidation" />
+                                    <span asp-validation-for="PostalCode" class="text-danger" id="PostalCodeValidation"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label fw-bold"></label>
+                                    <input asp-for="PhoneNumber" class="form-control" placeholder="Enter Phone Number" aria-describedby="PhoneNumberValidation" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger" id="PhoneNumberValidation"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Create
+                                </button>
+                            </div>
+                            <div>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left"></i> Back to List
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

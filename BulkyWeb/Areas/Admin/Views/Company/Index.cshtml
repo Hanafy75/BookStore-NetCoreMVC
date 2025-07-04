@@ -1,0 +1,64 @@
+﻿@model PaginatedList<Company>
+
+<div class="container">
+    <!-- Header and Button Row -->
+    <div class="row align-items-center py-3">
+        <div class="col-6">
+            <h2 class="text-primary mb-0">Company List</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-action="Create" asp-area="Admin" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Company
+            </a>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-12">
+            <form id="searchForm" role="search">
+                <input class="form-control" type="search" id="searchInput" placeholder="Search By Name" aria-label="Search">
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="d-none text-center my-3">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Company Table and Pagination -->
+    <div id="companyContainer" aria-live="polite">
+        @await Html.PartialAsync("_CompanyList", Model)
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the company "<span id="companyNameToDelete"></span>"?</p>
+                    <p class="text-danger"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Pass server-generated URL to JavaScript
+        window.appSettings = {
+            getCompaniesUrl: '@Url.Action("GetCompanies", "Company", new { area = "Admin" })'
+        };
+    </script>
+    <script src="~/js/Company/company.js" asp-append-version="true"></script>
+}
